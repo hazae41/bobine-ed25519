@@ -28,12 +28,12 @@ export function verify(session: packref): bool {
   return sessions.has(refs.numerize(session))
 }
 
-export function call(module: textref, method: textref, payload: packref, pubkey: blobref, signature: blobref): packref {
+export function call(module: textref, method: textref, params: packref, pubkey: blobref, signature: blobref): packref {
   const address = addresses.compute(modules.self(), pubkey)
 
   const nonce = nonces.get(address)
 
-  const message = blobs.encode(packs.create5(env.uuid(), module, method, payload, nonce))
+  const message = blobs.encode(packs.create5(env.uuid(), module, method, params, nonce))
 
   if (!ed25519.verify(pubkey, signature, message) && env.mode === 1)
     throw new Error("Invalid signature")
@@ -44,5 +44,5 @@ export function call(module: textref, method: textref, payload: packref, pubkey:
 
   sessions.add(refs.numerize(session))
 
-  return modules.call(module, method, packs.concat(packs.create1(session), payload))
+  return modules.call(module, method, packs.concat(packs.create1(session), params))
 }
