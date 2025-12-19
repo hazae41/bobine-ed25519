@@ -1,6 +1,6 @@
 # Ed25519 accounts for Bobine
 
-Use accounts with Ed25519 signatures and incrementing nonce
+Use accounts with Ed25519 signatures and incrementing nonce for [Bobine WebAssembly VM](https://github.com/hazae41/bobine)
 
 ## Usage
 
