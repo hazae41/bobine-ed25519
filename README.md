@@ -101,7 +101,7 @@ deno task execute:sign <ed25519_module_address> <token_module_address> transfer 
 
 It works!
 
-## Usage
+## Pseudocode
 
 Ensure your target module function accepts a session as its first parameter
 
