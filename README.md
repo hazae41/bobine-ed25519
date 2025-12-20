@@ -108,6 +108,25 @@ It works!
 Ensure your target module function accepts a session as its first parameter
 
 ```tsx
+import { blobs, modules, packref, packs, sha256, textref, texts } from "@hazae41/stdbob"
+
+export namespace addresses {
+
+  export function compute(session: packref): textref {
+    return blobs.toBase16(sha256.digest(blobs.encode(session)))
+  }
+
+  export function verify(session: packref): textref {
+    const module = packs.get<textref>(session, 0)
+
+    if (!packs.get<bool>(modules.call(module, texts.fromString("verify"), packs.create1(session)), 0))
+      throw new Error("Invalid session")
+
+    return compute(session)
+  }
+
+}
+
 export function test(session: packref): bool {
   const caller = addresses.verify(session)
 
