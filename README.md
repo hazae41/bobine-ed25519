@@ -101,7 +101,11 @@ Transfer some tokens to deadbeef
 deno task execute:sign <ed25519_module_address> <token_module_address> transfer text:deadbeef bigint:10
 ```
 
-It works!
+Check you have less tokens
+
+```bash
+deno task execute:call <token_module_address> get_balance text:<ed25519_account_address>
+```
 
 ## Usage
 
