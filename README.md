@@ -103,7 +103,7 @@ It works!
 
 ## Usage
 
-### Target module
+### Server-side module
 
 Ensure your target module function accepts a session as its first parameter
 
