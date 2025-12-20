@@ -28,17 +28,19 @@ Install dependencies
 deno install
 ```
 
-If needed modify your server URL in .env file
+If needed modify your server URL in a .env.local file
 
 ```env
 SERVER=http://localhost:8080
 ```
 
-Generate an Ed25519 keypair and write it in a new .env.local file
+Generate an Ed25519 keypair
 
 ```bash
 deno run -A ./run/src/mods/keygen/mod.ts
 ```
+
+Write it in a .env.local file
 
 ```env
 SIGKEY=302e020100300506032b657004220420e722733dfaf093dbbdac198e8744faa91add842d5c3078fdcb6f6b070b862dd9
@@ -69,7 +71,7 @@ Compile and deploy the token module with your account address as the owner (it w
 deno task prepack && deno task produce text:<ed25519_account_address>
 ```
 
-Go back to the root folder
+Go back to the initial folder
 
 ```bash
 cd ../..
