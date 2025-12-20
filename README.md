@@ -105,7 +105,7 @@ It works!
 
 ### Server-side module
 
-Ensure your target module function accepts a session (packref) as its first parameter
+Ensure your target module function accepts a session (packref) as its first parameter, subsequent parameters can be anything you want
 
 ```tsx
 import { blobs, modules, packref, packs, sha256, textref, texts } from "@hazae41/stdbob"
