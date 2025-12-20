@@ -1,30 +1,29 @@
-import { blobref, blobs, modules, packref, packs, sha256, textref, texts } from "@hazae41/stdbob"
+import { blobs, modules, packref, packs, sha256, textref, texts } from "@hazae41/stdbob"
 
 export namespace addresses {
 
   /**
-   * Compute an address from a module and public key
+   * Compute an address from a session
    * @param module 
-   * @param pubkey 
-   * @returns 
+   * @param caller 
+   * @returns address
    */
-  export function compute(module: textref, pubkey: blobref): textref {
-    return blobs.toBase16(blobs.slice(sha256.digest(blobs.encode(packs.create2(module, pubkey))), 12, 32))
+  export function compute(session: packref): textref {
+    return blobs.toBase16(sha256.digest(blobs.encode(session)))
   }
 
   /**
-   * Verify a session and return the address
+   * Verify a session against forgery and return its address
    * @param session 
-   * @returns 
+   * @returns address
    */
   export function verify(session: packref): textref {
-    const module = packs.get<blobref>(session, 0)
-    const pubkey = packs.get<blobref>(session, 1)
+    const module = packs.get<textref>(session, 0)
 
     if (!packs.get<bool>(modules.call(module, texts.fromString("verify"), packs.create1(session)), 0))
       throw new Error("Invalid session")
 
-    return compute(module, pubkey)
+    return compute(session)
   }
 
 }

@@ -74,9 +74,9 @@ export function get_balance(target: textref): bigintref {
  * @param amount 
  */
 export function mint(session: packref, target: textref, amount: bigintref): void {
-  const sender = addresses.verify(session)
+  const caller = addresses.verify(session)
 
-  if (!texts.equals(sender, owner.get()))
+  if (!texts.equals(caller, owner.get()))
     throw new Error("Unauthorized")
 
   balances.set(target, bigints.add(balances.get(target), amount))
@@ -91,16 +91,16 @@ export function mint(session: packref, target: textref, amount: bigintref): void
  * @param amount 
  */
 export function transfer(session: packref, target: textref, amount: bigintref): void {
-  const sender = addresses.verify(session)
+  const caller = addresses.verify(session)
 
-  const bsender = balances.get(sender)
+  const bsender = balances.get(caller)
   const btarget = balances.get(target)
 
   if (bigints.lt(bsender, amount)) // bsender < amount
     throw new Error("Insufficient balance")
 
-  balances.set(sender, bigints.sub(bsender, amount))
+  balances.set(caller, bigints.sub(bsender, amount))
   balances.set(target, bigints.add(btarget, amount))
 
-  storage.set(texts.fromString("transfer"), packs.create3(sender, target, amount))
+  storage.set(texts.fromString("transfer"), packs.create3(caller, target, amount))
 }

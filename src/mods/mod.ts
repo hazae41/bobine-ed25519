@@ -24,12 +24,9 @@ export function get_nonce(address: textref): bigintref {
   return nonces.get(address)
 }
 
-export function verify(session: packref): bool {
-  return sessions.has(refs.numerize(session))
-}
-
 export function call(module: textref, method: textref, params: packref, pubkey: blobref, signature: blobref): packref {
-  const address = addresses.compute(modules.self(), pubkey)
+  const session = packs.create2(modules.self(), pubkey)
+  const address = addresses.compute(session)
 
   const nonce = nonces.get(address)
 
@@ -40,9 +37,11 @@ export function call(module: textref, method: textref, params: packref, pubkey: 
 
   nonces.set(address, bigints.add(nonce, bigints.one()))
 
-  const session = packs.create2(modules.self(), pubkey)
-
   sessions.add(refs.numerize(session))
 
   return modules.call(module, method, packs.concat(packs.create1(session), params))
+}
+
+export function verify(session: packref): bool {
+  return sessions.has(refs.numerize(session))
 }
