@@ -103,6 +103,8 @@ It works!
 
 ## Usage
 
+### Target module
+
 Ensure your target module function accepts a session as its first parameter
 
 ```tsx
@@ -134,7 +136,7 @@ export function test(session: packref): bool {
 }
 ```
 
-### Pseudocode
+### Client-side pseudocode
 
 Generate an Ed25519 keypair
 
