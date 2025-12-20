@@ -7,6 +7,7 @@ import process from "node:process";
 import { generate } from "../../../libs/effort/mod.ts";
 import { Packable, Packed } from "../../../libs/packed/mod.ts";
 
+process.loadEnvFile(".env.local")
 process.loadEnvFile(".env")
 
 type Proof = [Array<string>, Array<[string, Uint8Array, Uint8Array]>, Array<[string, Uint8Array, Uint8Array]>, Packable, bigint]
@@ -97,21 +98,18 @@ function jsonify(value: Packable): unknown {
 
 const [ed25519, module, method, ...params] = process.argv.slice(2)
 
-const sigkey0 = Uint8Array.fromHex("302e020100300506032b657004220420e722733dfaf093dbbdac198e8744faa91add842d5c3078fdcb6f6b070b862dd9")
-const pubkey0 = Uint8Array.fromHex("302a300506032b65700321003307db3f4c10d841905907774ebb894e4cfb89f8a9754f5736288d70c2c593eb")
+const sigkeyAsBytes = Uint8Array.fromHex(process.env.SIGKEY)
+const pubkeyAsBytes = Uint8Array.fromHex(process.env.PUBKEY)
 
-const address = new Uint8Array(await crypto.subtle.digest("SHA-256", Writable.writeToBytesOrThrow(new Packed([ed25519, pubkey0])))).subarray(12, 32).toHex()
+const sigkey = await crypto.subtle.importKey("pkcs8", sigkeyAsBytes, "Ed25519", true, ["sign"])
 
-console.log("address", address)
+const encoded = Writable.writeToBytesOrThrow(new Packed([ed25519, pubkeyAsBytes]))
+const address = new Uint8Array(await crypto.subtle.digest("SHA-256", encoded)).toHex()
 
 const nonce = await execute<bigint>(ed25519, "get_nonce", [address])
 
-console.log("nonce", nonce)
-
-const sigkey = await crypto.subtle.importKey("pkcs8", sigkey0, "Ed25519", true, ["sign"])
-
 const message = Writable.writeToBytesOrThrow(new Packed(["17fa1cb5-c5af-4cfd-9bea-1a36590b890d", module, method, parse(params), nonce]))
 
-const signature0 = new Uint8Array(await crypto.subtle.sign("Ed25519", sigkey, message))
+const signature = new Uint8Array(await crypto.subtle.sign("Ed25519", sigkey, message))
 
-console.log(jsonify(await execute(ed25519, "call", [module, method, parse(params), pubkey0, signature0])))
+console.log(jsonify(await execute(ed25519, "call", [module, method, parse(params), pubkeyAsBytes, signature])))
