@@ -31,7 +31,7 @@ SERVER=http://localhost:8080
 Generate an Ed25519 keypair
 
 ```bash
-deno run -A ./run/src/mods/keygen/mod.ts
+npx deno run -A ./run/src/mods/keygen/mod.ts
 ```
 
 Write it in a .env.local file
@@ -44,13 +44,13 @@ PUBKEY=302a300506032b65700321003307db3f4c10d841905907774ebb894e4cfb89f8a9754f573
 Compile and deploy the ed25519 module (it will display the module address)
 
 ```bash
-deno task prepack && deno task produce
+npm run prepack && npm run produce
 ```
 
 Compute your account address using the module address
 
 ```bash
-deno run -A ./run/src/mods/address/mod.ts <ed25519_module_address>
+npx deno run -A ./run/src/mods/address/mod.ts <ed25519_module_address>
 ```
 
 Go to ./tst/token
@@ -62,7 +62,7 @@ cd ./tst/token
 Compile and deploy the token module with your account address as the owner (it will display the module address)
 
 ```bash
-deno task prepack && deno task produce text:<ed25519_account_address>
+npm run prepack && npm run produce text:<ed25519_account_address>
 ```
 
 Go back to the initial folder
@@ -74,31 +74,31 @@ cd ../..
 Initialize the token module with your account address as the owner
 
 ```bash
-deno task execute:call <token_module_address> init text:<ed25519_account_address>
+npm run execute:call <token_module_address> init text:<ed25519_account_address>
 ```
 
 Mint yourself some tokens (note the `execute:sign` instead of `execute:call`)
 
 ```bash
-deno task execute:sign <ed25519_module_address> <token_module_address> mint text:<ed25519_account_address> bigint:100
+npm run execute:sign <ed25519_module_address> <token_module_address> mint text:<ed25519_account_address> bigint:100
 ```
 
 Check you have some tokens
 
 ```bash
-deno task execute:call <token_module_address> get_balance text:<ed25519_account_address>
+npm run execute:call <token_module_address> get_balance text:<ed25519_account_address>
 ```
 
 Transfer some tokens to deadbeef
 
 ```bash
-deno task execute:sign <ed25519_module_address> <token_module_address> transfer text:deadbeef bigint:10
+npm run execute:sign <ed25519_module_address> <token_module_address> transfer text:deadbeef bigint:10
 ```
 
 Check you have less tokens
 
 ```bash
-deno task execute:call <token_module_address> get_balance text:<ed25519_account_address>
+npm run execute:call <token_module_address> get_balance text:<ed25519_account_address>
 ```
 
 ## Usage
