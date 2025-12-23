@@ -4,12 +4,6 @@ Use accounts with Ed25519 signatures and incrementing nonce for [Bobine WebAssem
 
 ## Demo
 
-Install Deno
-
-```bash
-npm install -g deno
-```
-
 Clone this Git repository
 
 ```bash
@@ -25,7 +19,7 @@ rm -rf ./.git && git init
 Install dependencies
 
 ```bash
-deno install
+npm install
 ```
 
 If needed modify your server URL in a .env.local file
