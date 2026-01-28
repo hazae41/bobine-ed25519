@@ -36,15 +36,6 @@ namespace balances {
 }
 
 /**
- * Clone this module with a different creator
- * @param creator 
- * @returns 
- */
-export function clone(creator: textref): textref {
-  return modules.create(modules.load(modules.self()), packs.create1(creator))
-}
-
-/**
  * Initialize the token with a specific owner
  * @param creator 
  * @returns nothing
@@ -63,7 +54,7 @@ export function init(creator: textref): void {
  * @param target 
  * @returns i64
  */
-export function get_balance(target: textref): bigintref {
+export function balance(target: textref): bigintref {
   return balances.get(target)
 }
 

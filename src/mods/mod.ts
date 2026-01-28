@@ -1,5 +1,4 @@
 import { bigintref, bigints, blobref, blobs, ed25519, env, modules, packref, packs, refs, storage, textref, texts } from "@hazae41/stdbob"
-import { addresses } from "../libs/address/mod"
 
 namespace nonces {
 
@@ -20,28 +19,27 @@ namespace nonces {
 
 const sessions = new Set<usize>()
 
-export function get_nonce(address: textref): bigintref {
-  return nonces.get(address)
+export function verify(session: packref): bool {
+  return sessions.has(refs.numerize(session))
 }
 
 export function call(module: textref, method: textref, params: packref, pubkey: blobref, signature: blobref): packref {
-  const session = packs.create2(modules.self(), pubkey)
-  const address = addresses.compute(session)
-
-  const nonce = nonces.get(address)
+  const nonce = nonces.get(pubkey)
 
   const message = blobs.encode(packs.create5(env.uuid(), module, method, params, nonce))
 
   if (!ed25519.verify(pubkey, signature, message) && env.mode === 1)
     throw new Error("Invalid signature")
 
-  nonces.set(address, bigints.add(nonce, bigints.one()))
+  nonces.set(pubkey, bigints.add(nonce, bigints.one()))
+
+  const session = packs.create2(modules.self(), pubkey)
 
   sessions.add(refs.numerize(session))
 
   return modules.call(module, method, packs.concat(packs.create1(session), params))
 }
 
-export function verify(session: packref): bool {
-  return sessions.has(refs.numerize(session))
+export function nonce(address: textref): bigintref {
+  return nonces.get(address)
 }
