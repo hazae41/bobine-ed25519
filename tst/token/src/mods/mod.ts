@@ -7,7 +7,7 @@ namespace owner {
     const found = storage.get(texts.fromString("owner"))
 
     if (!found)
-      return texts.fromString("0000000000000000000000000000000000000000")
+      return texts.fromString("0000000000000000000000000000000000000000000000000000000000000000")
 
     return packs.get<textref>(found, 0)
   }

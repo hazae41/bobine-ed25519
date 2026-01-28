@@ -2,6 +2,10 @@
 
 Use accounts with Ed25519 signatures and incrementing nonce for [Bobine WebAssembly VM](https://github.com/hazae41/bobine)
 
+```tsx
+53452f0b3df2bb2aeb6b56a25ff008854f82caa881cf8aa1d230ff7f85bbeb34
+```
+
 ## Demo
 
 Clone this Git repository
